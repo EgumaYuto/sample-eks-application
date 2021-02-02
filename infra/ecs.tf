@@ -9,7 +9,7 @@ resource "aws_ecs_cluster" "cluster" {
 ##################
 # Task Definition
 ##################
-data "aws_iam_policy_document" "task_execution_assume_policy" {
+data "aws_iam_policy_document" "task_assume_policy" {
   statement {
     effect = "Allow"
     actions = ["sts:AssumeRole"]
@@ -20,22 +20,27 @@ data "aws_iam_policy_document" "task_execution_assume_policy" {
   }
 }
 
-resource "aws_iam_role" "task_execution_role" {
+resource "aws_iam_role" "execution_role" {
   name = "${local.name}-execution-role"
-  assume_role_policy = data.aws_iam_policy_document.task_execution_assume_policy.json
+  assume_role_policy = data.aws_iam_policy_document.task_assume_policy.json
 }
 
-resource "aws_iam_role_policy_attachment" "task_execution_policy_attachment" {
-  role       = aws_iam_role.task_execution_role.name
+resource "aws_iam_role_policy_attachment" "execution_policy_attachment" {
+  role       = aws_iam_role.execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_iam_role" "task_role" {
+  name = "${local.name}-task-role"
+  assume_role_policy = data.aws_iam_policy_document.task_assume_policy.json
 }
 
 resource "aws_ecs_task_definition" "dummy_definition" {
   family                = local.name
   network_mode          = "awsvpc"
 
-  execution_role_arn    = aws_iam_role.task_execution_role.arn
-  task_role_arn         = aws_iam_role.task_execution_role.arn
+  execution_role_arn    = aws_iam_role.execution_role.arn
+  task_role_arn         = aws_iam_role.task_role.arn
 
   cpu    = "512"
   memory = "1024"
@@ -91,7 +96,8 @@ resource "aws_ecs_service" "service" {
   desired_count   = 2
 
   network_configuration {
-    subnets          = [aws_subnet.private_1a.id, aws_subnet.private_1c.id, aws_subnet.private_1d.id]
+    // subnets          = [aws_subnet.private_1a.id, aws_subnet.private_1c.id, aws_subnet.private_1d.id]
+    subnets          = [aws_subnet.private_1a.id]
     security_groups  = [aws_security_group.ecs_sg.id]
     assign_public_ip = false
   }
