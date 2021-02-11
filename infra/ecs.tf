@@ -95,9 +95,15 @@ resource "aws_ecs_service" "service" {
   launch_type     = "FARGATE"
   desired_count   = 2
 
+  load_balancer {
+    target_group_arn = aws_alb_target_group.target_group.arn
+    container_name = local.name
+    container_port = 8080
+  }
+
   network_configuration {
     // subnets          = [aws_subnet.private_1a.id, aws_subnet.private_1c.id, aws_subnet.private_1d.id]
-    subnets          = [aws_subnet.private_1a.id]
+    subnets          = [aws_subnet.private_1a.id, aws_subnet.private_1c.id]
     security_groups  = [aws_security_group.ecs_sg.id]
     assign_public_ip = false
   }

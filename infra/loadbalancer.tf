@@ -1,15 +1,27 @@
-//resource "aws_elb" "elb" {
-//  name = "elb"
-//  availability_zones = [
-//    "ap-northeast-1a"
-////    "ap-northeast-1c",
-////    "ap-northeast-1d"
-//  ]
-//
-//  listener {
-//    instance_port = 8080
-//    instance_protocol = "http"
-//    lb_port = 80
-//    lb_protocol = "http"
-//  }
-//}
+resource "aws_alb" "alb" {
+  name = local.name
+  security_groups = [aws_security_group.ecs_sg.id]
+  subnets = [
+    aws_subnet.public_1a.id,
+    aws_subnet.public_1c.id,
+  ]
+}
+
+resource "aws_alb_target_group" "target_group" {
+  name     = local.name
+  vpc_id   = aws_vpc.vpc.id
+  protocol = "HTTP"
+  port     = 8080
+  target_type = "ip"
+}
+
+resource "aws_alb_listener" "alb" {
+  load_balancer_arn = aws_alb.alb.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    target_group_arn = aws_alb_target_group.target_group.arn
+    type             = "forward"
+  }
+}
