@@ -11,17 +11,17 @@ resource "aws_ecs_cluster" "cluster" {
 ##################
 data "aws_iam_policy_document" "task_assume_policy" {
   statement {
-    effect = "Allow"
+    effect  = "Allow"
     actions = ["sts:AssumeRole"]
     principals {
       identifiers = ["ecs-tasks.amazonaws.com"]
-      type = "Service"
+      type        = "Service"
     }
   }
 }
 
 resource "aws_iam_role" "execution_role" {
-  name = "${local.name}-execution-role"
+  name               = "${local.name}-execution-role"
   assume_role_policy = data.aws_iam_policy_document.task_assume_policy.json
 }
 
@@ -31,19 +31,19 @@ resource "aws_iam_role_policy_attachment" "execution_policy_attachment" {
 }
 
 resource "aws_iam_role" "task_role" {
-  name = "${local.name}-task-role"
+  name               = "${local.name}-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_assume_policy.json
 }
 
 resource "aws_ecs_task_definition" "dummy_definition" {
-  family                = local.name
-  network_mode          = "awsvpc"
+  family       = local.name
+  network_mode = "awsvpc"
 
-  execution_role_arn    = aws_iam_role.execution_role.arn
-  task_role_arn         = aws_iam_role.task_role.arn
+  execution_role_arn = aws_iam_role.execution_role.arn
+  task_role_arn      = aws_iam_role.task_role.arn
 
-  cpu    = "512"
-  memory = "1024"
+  cpu                      = "512"
+  memory                   = "1024"
   requires_compatibilities = ["FARGATE"]
 
   container_definitions = <<EOF
@@ -74,16 +74,16 @@ resource "aws_security_group" "ecs_sg" {
   vpc_id      = aws_vpc.vpc.id
 
   ingress {
-    from_port       = 8080
-    to_port         = 8080
-    protocol        = "tcp"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port = 80
-    to_port = 80
-    protocol = "tcp"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -104,8 +104,8 @@ resource "aws_ecs_service" "service" {
 
   load_balancer {
     target_group_arn = aws_alb_target_group.target_group.arn
-    container_name = local.name
-    container_port = 8080
+    container_name   = local.name
+    container_port   = 8080
   }
 
   network_configuration {

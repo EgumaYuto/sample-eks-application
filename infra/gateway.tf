@@ -1,5 +1,5 @@
 resource "aws_apigatewayv2_api" "demo" {
-  name = local.name
+  name          = local.name
   protocol_type = "HTTP"
 }
 
@@ -14,7 +14,7 @@ resource "aws_apigatewayv2_integration" "demo" {
 }
 
 resource "aws_apigatewayv2_route" "demo" {
-  api_id = aws_apigatewayv2_api.demo.id
+  api_id    = aws_apigatewayv2_api.demo.id
   route_key = "GET /sample"
 
   target = "integrations/${aws_apigatewayv2_integration.demo.id}"
@@ -36,8 +36,8 @@ resource "aws_apigatewayv2_stage" "this" {
 }
 
 resource "aws_apigatewayv2_vpc_link" "vpc_link" {
-  name = "demo"
-  subnet_ids = [aws_subnet.private_1a.id, aws_subnet.private_1c.id, aws_subnet.private_1d.id]
+  name               = "demo"
+  subnet_ids         = [aws_subnet.private_1a.id, aws_subnet.private_1c.id, aws_subnet.private_1d.id]
   security_group_ids = [aws_security_group.ecs_sg.id]
 }
 

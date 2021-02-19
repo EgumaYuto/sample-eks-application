@@ -1,3 +1,3 @@
 locals {
-  name = "demo"
+  name = "http-api-sample"
 }
