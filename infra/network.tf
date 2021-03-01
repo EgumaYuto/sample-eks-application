@@ -156,6 +156,17 @@ resource "aws_nat_gateway" "ngw_c" {
   subnet_id     = aws_subnet.public_1c.id
 }
 
+resource "aws_eip" "nat_public_1d_ip" {
+  tags = {
+    Name = "nat public 1d"
+  }
+}
+
+resource "aws_nat_gateway" "ngw_d" {
+  allocation_id = aws_eip.nat_public_1d_ip.id
+  subnet_id     = aws_subnet.public_1d.id
+}
+
 ################
 # Public routes
 ################
@@ -204,6 +215,15 @@ resource "aws_route_table" "private_subnet_route_table_1c" {
   }
 }
 
+resource "aws_route_table" "private_subnet_route_table_1d" {
+  vpc_id = aws_vpc.vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_nat_gateway.ngw_d.id
+  }
+}
+
 resource "aws_route_table_association" "private_subnet_route_table_association_a" {
   route_table_id = aws_route_table.private_subnet_route_table_1a.id
   subnet_id      = aws_subnet.private_1a.id
@@ -215,6 +235,6 @@ resource "aws_route_table_association" "private_subnet_route_table_association_c
 }
 
 resource "aws_route_table_association" "private_subnet_route_table_association_d" {
-  route_table_id = aws_route_table.private_subnet_route_table_1c.id
+  route_table_id = aws_route_table.private_subnet_route_table_1d.id
   subnet_id      = aws_subnet.private_1d.id
 }
