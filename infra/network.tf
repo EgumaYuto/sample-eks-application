@@ -10,7 +10,7 @@ resource "aws_internet_gateway" "igw" {
 #########
 resource "aws_subnet" "public_1a" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = "10.0.0.0/24"
+  cidr_block        = cidrsubnet(local.cidr_block, 8, 0)
   availability_zone = "ap-northeast-1a"
 
   tags = {
@@ -20,7 +20,7 @@ resource "aws_subnet" "public_1a" {
 
 resource "aws_subnet" "public_1c" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = "10.0.1.0/24"
+  cidr_block        = cidrsubnet(local.cidr_block, 8, 1)
   availability_zone = "ap-northeast-1c"
 
   tags = {
@@ -30,7 +30,7 @@ resource "aws_subnet" "public_1c" {
 
 resource "aws_subnet" "public_1d" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = "10.0.2.0/24"
+  cidr_block        = cidrsubnet(local.cidr_block, 8, 2)
   availability_zone = "ap-northeast-1d"
 
   tags = {
@@ -39,8 +39,8 @@ resource "aws_subnet" "public_1d" {
 }
 
 resource "aws_subnet" "private_1a" {
-  cidr_block        = "10.0.3.0/24"
   vpc_id            = aws_vpc.vpc.id
+  cidr_block        = cidrsubnet(local.cidr_block, 8, 3)
   availability_zone = "ap-northeast-1a"
 
   tags = {
@@ -49,8 +49,8 @@ resource "aws_subnet" "private_1a" {
 }
 
 resource "aws_subnet" "private_1c" {
-  cidr_block        = "10.0.4.0/24"
   vpc_id            = aws_vpc.vpc.id
+  cidr_block        = cidrsubnet(local.cidr_block, 8, 4)
   availability_zone = "ap-northeast-1c"
 
   tags = {
@@ -59,8 +59,8 @@ resource "aws_subnet" "private_1c" {
 }
 
 resource "aws_subnet" "private_1d" {
-  cidr_block        = "10.0.5.0/24"
   vpc_id            = aws_vpc.vpc.id
+  cidr_block        = cidrsubnet(local.cidr_block, 8, 5)
   availability_zone = "ap-northeast-1d"
 
   tags = {
