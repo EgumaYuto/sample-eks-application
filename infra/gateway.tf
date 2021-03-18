@@ -33,6 +33,10 @@ resource "aws_apigatewayv2_stage" "this" {
   name          = "$default"
   auto_deploy   = true
   deployment_id = aws_apigatewayv2_deployment.demo.id
+
+  lifecycle {
+    ignore_changes = [deployment_id]
+  }
 }
 
 resource "aws_apigatewayv2_vpc_link" "vpc_link" {
@@ -40,53 +44,3 @@ resource "aws_apigatewayv2_vpc_link" "vpc_link" {
   subnet_ids         = [for subnet in aws_subnet.private : subnet.id]
   security_group_ids = [aws_security_group.ecs_sg.id]
 }
-
-//resource "aws_api_gateway_rest_api" "demo" {
-//  name = local.name
-//
-//  body = jsonencode({
-//    openapi = "3.0.1"
-//    info = {
-//      title = "example"
-//      version = "1.0"
-//    }
-//    paths = {
-//      "/" = {
-//        get = {
-//          x-amazon-apigateway-integration = {
-//            httpMethod           = "GET"
-//            type                 = "HTTP_PROXY"
-//            connectionType       = "VPC_LINK"
-//            connectionId         = aws_apigatewayv2_vpc_link.vpc_link.id
-//            uri                  = aws_alb.alb.arn
-//            payloadFormatVersion = "1.0"
-//          }
-//        }
-//      }
-//    }
-//  })
-//
-//  endpoint_configuration {
-//    types = ["REGIONAL"]
-//  }
-//}
-//
-//resource "aws_api_gateway_deployment" "deployment" {
-//  rest_api_id = aws_api_gateway_rest_api.demo.id
-//
-//  triggers = {
-//    redeployment = sha1(jsonencode(aws_api_gateway_rest_api.demo.body))
-//  }
-//
-//  lifecycle {
-//    create_before_destroy = true
-//  }
-//}
-//
-//resource "aws_api_gateway_stage" "v1" {
-//  deployment_id = aws_api_gateway_deployment.deployment.id
-//  rest_api_id   = aws_api_gateway_rest_api.demo.id
-//  stage_name    = "v1"
-//}
-
-
