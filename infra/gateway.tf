@@ -37,7 +37,7 @@ resource "aws_apigatewayv2_stage" "this" {
 
 resource "aws_apigatewayv2_vpc_link" "vpc_link" {
   name               = "demo"
-  subnet_ids         = [aws_subnet.private_1a.id, aws_subnet.private_1c.id, aws_subnet.private_1d.id]
+  subnet_ids         = [for subnet in aws_subnet.private : subnet.id]
   security_group_ids = [aws_security_group.ecs_sg.id]
 }
 

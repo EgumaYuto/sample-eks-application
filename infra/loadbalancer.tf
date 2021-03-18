@@ -1,11 +1,8 @@
 resource "aws_alb" "alb" {
   name            = local.name
   security_groups = [aws_security_group.ecs_sg.id]
-  subnets = [
-    aws_subnet.private_1a.id,
-    aws_subnet.private_1c.id,
-  ]
-  internal = true
+  subnets         = [for subnet in aws_subnet.private : subnet.id]
+  internal        = true
 }
 
 resource "aws_alb_target_group" "target_group" {
