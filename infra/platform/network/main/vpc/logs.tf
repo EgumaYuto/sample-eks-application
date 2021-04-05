@@ -1,8 +1,3 @@
-resource "aws_vpc" "vpc" {
-  cidr_block         = local.cidr_block
-  enable_dns_support = true
-}
-
 resource "aws_flow_log" "log" {
   iam_role_arn    = aws_iam_role.flow_log_role.arn
   log_destination = aws_cloudwatch_log_group.flow_log_group.arn
@@ -11,7 +6,7 @@ resource "aws_flow_log" "log" {
 }
 
 resource "aws_cloudwatch_log_group" "flow_log_group" {
-  name = local.vpc.flow_log.name
+  name = local.flow_log_group
 }
 
 data "aws_iam_policy_document" "flow_log_assume_policy" {
@@ -43,12 +38,12 @@ data "aws_iam_policy_document" "flow_log_policy" {
 }
 
 resource "aws_iam_role" "flow_log_role" {
-  name               = local.vpc.flow_log.name
+  name               = module.naming.name
   assume_role_policy = data.aws_iam_policy_document.flow_log_assume_policy.json
 }
 
 resource "aws_iam_policy" "flow_log_policy" {
-  name   = local.vpc.flow_log.name
+  name   = module.naming.name
   policy = data.aws_iam_policy_document.flow_log_policy.json
 }
 
