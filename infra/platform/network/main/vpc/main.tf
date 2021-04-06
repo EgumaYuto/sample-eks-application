@@ -1,3 +1,12 @@
+terraform {
+  backend "s3" {
+  }
+}
+
+provider "aws" {
+  region = var.default_region
+}
+
 module "naming" {
   source = "../../../../_module/naming"
   role   = local.role
@@ -8,4 +17,3 @@ resource "aws_vpc" "vpc" {
   enable_dns_support = true
   tags               = module.naming.tags
 }
-
