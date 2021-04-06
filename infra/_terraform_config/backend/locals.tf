@@ -1,3 +1,3 @@
 locals {
-  name = "sample-ecs-application-tfstate"
+  name = var.state_bucket
 }
