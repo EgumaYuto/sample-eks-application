@@ -4,7 +4,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "ap-northeast-1"
+  region = var.default_region
 }
 
 module "naming" {
@@ -12,7 +12,7 @@ module "naming" {
   role   = local.role
 }
 
-resource "aws_subnet" "subent" {
+resource "aws_subnet" "subnet" {
   count = length(var.default_availability_zones)
 
   vpc_id            = local.vpc_id
