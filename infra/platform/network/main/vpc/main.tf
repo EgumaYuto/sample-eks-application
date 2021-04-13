@@ -13,7 +13,8 @@ module "naming" {
 }
 
 resource "aws_vpc" "vpc" {
-  cidr_block         = local.cidr_block
-  enable_dns_support = true
-  tags               = module.naming.tags
+  cidr_block           = local.cidr_block
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+  tags                 = module.naming.tags
 }
