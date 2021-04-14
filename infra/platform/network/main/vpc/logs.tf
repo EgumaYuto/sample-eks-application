@@ -32,7 +32,7 @@ data "aws_iam_policy_document" "flow_log_policy" {
     ]
     resources = [
       aws_cloudwatch_log_group.flow_log_group.arn,
-      "${aws_cloudwatch_log_group.flow_log_group.arn}/*"
+      "${aws_cloudwatch_log_group.flow_log_group.arn}*"
     ]
   }
 }
