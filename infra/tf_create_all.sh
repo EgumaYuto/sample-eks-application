@@ -13,3 +13,5 @@ TF_ARGS=${@:3}
 ./tf.sh $TF_CMD $ENV service/sample-api/elb $TF_ARGS
 ./tf.sh $TF_CMD $ENV service/sample-api/ecs $TF_ARGS
 ./tf.sh $TF_CMD $ENV service/sample-api/api-gateway $TF_ARGS
+
+./tf.sh $TF_CMD $ENV operation/bastion $TF_ARGS
