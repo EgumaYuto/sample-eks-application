@@ -32,10 +32,10 @@ resource "aws_eip" "nat_ip" {
 resource "aws_nat_gateway" "nat_gateway" {
   count         = length(var.default_availability_zones)
   allocation_id = aws_eip.nat_ip[count.index].id
-  subnet_id     = aws_subnet.subnet[count.index].id
+  subnet_id     = local.public_subnet_ids[count.index]
 }
 
-resource "aws_route_table" "private" {
+resource "aws_route_table" "route_table" {
   count  = length(var.default_availability_zones)
   vpc_id = local.vpc_id
 
@@ -45,8 +45,8 @@ resource "aws_route_table" "private" {
   }
 }
 
-resource "aws_route_table_association" "private_subnet_route_table_association_a" {
+resource "aws_route_table_association" "route_table_association" {
   count          = length(var.default_availability_zones)
-  route_table_id = aws_route_table.private[count.index].id
+  route_table_id = aws_route_table.route_table[count.index].id
   subnet_id      = aws_subnet.subnet[count.index].id
 }
