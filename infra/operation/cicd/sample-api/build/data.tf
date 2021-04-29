@@ -1,5 +1,3 @@
-data "aws_caller_identity" "identify" {}
-
 data "terraform_remote_state" "ecr" {
   backend = "s3"
 
