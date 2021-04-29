@@ -19,9 +19,10 @@ resource "aws_codebuild_project" "build" {
     type = "NO_ARTIFACTS"
   }
   environment {
-    compute_type = "BUILD_GENERAL1_SMALL"
-    image        = "aws/codebuild/standard:5.0"
-    type         = "LINUX_CONTAINER"
+    compute_type    = "BUILD_GENERAL1_SMALL"
+    image           = "aws/codebuild/standard:5.0"
+    type            = "LINUX_CONTAINER"
+    privileged_mode = true
 
     environment_variable {
       name  = "REPOSITORY_URI"
