@@ -4,14 +4,14 @@ env:
   variables:
     BASE_IMAGE: "openjdk:11.0.11-jdk-slim-buster"
 phases:
+  pre_build:
+    commands:
+      - IMAGE_TAG=$(echo ${CODEBUILD_RESOLVED_SOURCE_VERSION} | cut -c 1-9)
+      - $(aws ecr get-login --registry-ids ${AWS_ACCOUNT_ID} --no-include-email --region ${AWS_DEFAULT_REGION})
   build:
     commands:
       - docker container run -i --rm -v $(pwd):/app -w /app ${BASE_IMAGE} sh -c "./gradlew build"
       - docker image build --no-cache -t ${REPOSITORY_URI}:latest .
-  post_build:
-    commands:
-      - $(aws ecr get-login --registry-ids ${AWS_ACCOUNT_ID} --no-include-email --region ${AWS_DEFAULT_REGION})
-      - IMAGE_TAG=$(echo ${CODEBUILD_RESOLVED_SOURCE_VERSION} | cut -c 1-9)
       - docker tag ${REPOSITORY_URI}:latest ${REPOSITORY_URI}:${IMAGE_TAG}
       - docker push ${REPOSITORY_URI}:${IMAGE_TAG}
       - docker push ${REPOSITORY_URI}:latest
