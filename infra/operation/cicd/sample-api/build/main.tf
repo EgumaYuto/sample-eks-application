@@ -25,8 +25,18 @@ resource "aws_codebuild_project" "build" {
     privileged_mode = true
 
     environment_variable {
+      name  = "AWS_ACCOUNT_ID"
+      value = local.aws_account_id
+    }
+
+    environment_variable {
+      name  = "AWS_DEFAULT_REGION"
+      value = local.aws_default_region
+    }
+
+    environment_variable {
       name  = "REPOSITORY_URI"
-      value = data.aws_ecr_repository.repository.repository_url
+      value = local.repository_uri
     }
   }
   source {
