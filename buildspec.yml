@@ -2,8 +2,9 @@ version: 0.2
 
 env:
   variables:
-    BASE_IMAGE: "openjdk:11.0.11-jre-slim-buster"
+    BASE_IMAGE: "openjdk:11.0.11-jdk-slim-buster"
 phases:
   build:
     commands:
-      - docker run -i --rm -v $(pwd):/app -w /app ${BASE_IMAGE} sh -c "./gradlew build"
+      - docker container run -i --rm -v $(pwd):/app -w /app ${BASE_IMAGE} sh -c "./gradlew build"
+      - docker image build --no-cache -t ${REPOSITORY_URI}:latest .

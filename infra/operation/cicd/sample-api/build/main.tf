@@ -22,6 +22,11 @@ resource "aws_codebuild_project" "build" {
     compute_type = "BUILD_GENERAL1_SMALL"
     image        = "aws/codebuild/standard:5.0"
     type         = "LINUX_CONTAINER"
+
+    environment_variable {
+      name  = "REPOSITORY_URI"
+      value = data.aws_ecr_repository.repository.repository_url
+    }
   }
   source {
     type      = "GITHUB"
