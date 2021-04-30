@@ -40,3 +40,8 @@ resource "aws_codebuild_project" "build" {
     buildspec = "buildspec.yml"
   }
 }
+
+resource "aws_cloudwatch_log_group" "log_group" {
+  name              = "/aws/codebuild/${aws_codebuild_project.build.name}"
+  retention_in_days = 7
+}
