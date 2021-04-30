@@ -1,6 +1,13 @@
 output "target_group" {
   value = {
-    arn = aws_alb_target_group.target_group.arn
+    green = {
+      arn  = aws_alb_target_group.green_group.arn
+      name = aws_alb_target_group.green_group.name
+    }
+    blue = {
+      arn  = aws_alb_target_group.blue_group.arn
+      name = aws_alb_target_group.blue_group.name
+    }
   }
 }
 

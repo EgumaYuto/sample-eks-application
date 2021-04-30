@@ -19,8 +19,16 @@ resource "aws_alb" "alb" {
   internal        = true
 }
 
-resource "aws_alb_target_group" "target_group" {
-  name        = module.naming.name
+resource "aws_alb_target_group" "green_group" {
+  name        = "${module.naming.name}-green"
+  vpc_id      = local.vpc_id
+  protocol    = "HTTP"
+  port        = 8080
+  target_type = "ip"
+}
+
+resource "aws_alb_target_group" "blue_group" {
+  name        = "${module.naming.name}-blue"
   vpc_id      = local.vpc_id
   protocol    = "HTTP"
   port        = 8080
@@ -33,7 +41,7 @@ resource "aws_alb_listener" "alb" {
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = aws_alb_target_group.target_group.arn
+    target_group_arn = aws_alb_target_group.green_group.arn
     type             = "forward"
   }
 }
