@@ -16,3 +16,4 @@ TF_ARGS=${@:3}
 
 ./tf.sh $TF_CMD $ENV operation/bastion $TF_ARGS
 ./tf.sh $TF_CMD $ENV operation/cicd/sample-api/build $TF_ARGS
+./tf.sh $TF_CMD $ENV operation/cicd/sample-api/deploy $TF_ARGS
