@@ -1,0 +1,52 @@
+{
+  "config": {
+    "tfstate": {
+      "type": "S3",
+      "base_path": "state"
+    },
+    "env_variables": [
+      {
+        "name": "dev",
+        "file_path": "_terraform_config/env_variables/dev.json"
+      }
+    ]
+  },
+  "modules" : [
+    {
+      "path": "platform",
+      "modules": [
+        {
+          "path": "network",
+          "modules": [
+            {
+              "path": "main",
+              "modules": [
+                {
+                  "path": "vpc",
+                  "type": "module"
+                },
+                {
+                  "path": "subnet",
+                  "modules": [
+                    {
+                      "path": "public",
+                      "type": "module"
+                    },
+                    {
+                      "path": "private",
+                      "type": "module",
+                      "depends_on": [
+                        "platform/main/vpc",
+                        "platform/main/subnet/public"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
