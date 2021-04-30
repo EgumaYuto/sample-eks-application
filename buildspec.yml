@@ -7,7 +7,7 @@ phases:
   pre_build:
     commands:
       - IMAGE_TAG=$(echo ${CODEBUILD_RESOLVED_SOURCE_VERSION} | cut -c 1-9)
-      - $(aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REPOSITORY_URI})
+      - aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REPOSITORY_URI}
   build:
     commands:
       - docker container run -i --rm -v $(pwd):/app -w /app ${BASE_IMAGE} sh -c "./gradlew build"
