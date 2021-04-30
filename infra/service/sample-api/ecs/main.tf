@@ -18,7 +18,7 @@ resource "aws_ecs_service" "service" {
   task_definition  = aws_ecs_task_definition.dummy_definition.arn
   launch_type      = "FARGATE"
   desired_count    = 2
-  platform_version = "1.3.0" // TODO "latest"
+  platform_version = "1.4.0"
 
   load_balancer {
     target_group_arn = local.target_group_arn
