@@ -40,3 +40,6 @@ out/
 ### terraform ###
 .terraform
 terraform.tfstate*
+
+### Node ###
+node_modules
