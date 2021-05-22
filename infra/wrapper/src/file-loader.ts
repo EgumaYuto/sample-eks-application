@@ -2,7 +2,7 @@ import {Overview, OverviewConfig} from "./model";
 import fs from "fs";
 import {argv} from "./arguments";
 
-export const loadDirectoriesJson = (): Overview => {
+export const loadOverviewJson = (): Overview => {
     return JSON.parse(fs.readFileSync(getOverviewFilePath(), "utf-8"));
 };
 
