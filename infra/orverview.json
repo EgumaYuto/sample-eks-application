@@ -1,6 +1,6 @@
 {
   "config": {
-    "tfstate": {
+    "backend": {
       "type": "S3",
       "base_path": "state"
     },
@@ -11,23 +11,23 @@
       }
     ]
   },
-  "modules" : [
+  "directories": [
     {
       "path": "platform",
-      "modules": [
+      "directories": [
         {
           "path": "network",
-          "modules": [
+          "directories": [
             {
               "path": "main",
-              "modules": [
+              "directories": [
                 {
                   "path": "vpc",
                   "type": "module"
                 },
                 {
                   "path": "subnet",
-                  "modules": [
+                  "directories": [
                     {
                       "path": "public",
                       "type": "module"
@@ -43,6 +43,15 @@
                   ]
                 }
               ]
+            }
+          ]
+        },
+        {
+          "path": "ecs-cluster",
+          "directories": [
+            {
+              "path": "main",
+              "type": "module"
             }
           ]
         }
