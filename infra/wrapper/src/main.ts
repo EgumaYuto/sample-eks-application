@@ -49,18 +49,18 @@ const execTerraform = (tfCmd: TfCmd, paths: Array<string>) => {
 const doExecTerraform = (command: string, path: string, onEnd: () => void) => {
   logCommands(command, path);
   const commandWords = command.split(" ");
-  const proc = spawn(
+  const childProcess = spawn(
     commandWords[0],
     commandWords.slice(1).filter((a) => a.length !== 0),
     { cwd: `../${path}` }
   );
-  proc.stdout.on("data", (data) => {
+  childProcess.stdout.on("data", (data) => {
     process.stdout.write(data.toString());
   });
-  proc.stderr.on("data", (data) => {
+  childProcess.stderr.on("data", (data) => {
     process.stdout.write(data.toString());
   });
-  proc.stderr.on("end", onEnd);
+  childProcess.stderr.on("end", onEnd);
 };
 
 const loadEnvVariables = (config: OverviewConfig) => {
