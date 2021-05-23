@@ -60,7 +60,7 @@ const doExecTerraform = (command: string, path: string, onEnd: () => void) => {
   childProcess.stderr.on("data", (data) => {
     process.stdout.write(data.toString());
   });
-  childProcess.stderr.on("end", onEnd);
+  childProcess.on("end", onEnd);
 };
 
 const loadEnvVariables = (config: OverviewConfig) => {
