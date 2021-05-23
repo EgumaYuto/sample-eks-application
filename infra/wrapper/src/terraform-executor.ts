@@ -2,8 +2,6 @@ import { OverviewConfig } from "./model";
 
 export type TfCmd = "init" | "plan" | "apply" | "destroy";
 
-
-
 export const buildCommandWithOption = (
   path: string,
   tfCmd: TfCmd,
@@ -21,7 +19,10 @@ export const buildCommandWithOption = (
   }
 };
 
-const buildInitCommandWithOption = (path: string, config: OverviewConfig): string => {
+const buildInitCommandWithOption = (
+  path: string,
+  config: OverviewConfig
+): string => {
   const options =
     `-backend-config key=state/${
       path.endsWith("/") ? path.slice(0, -1) : path
@@ -31,6 +32,10 @@ const buildInitCommandWithOption = (path: string, config: OverviewConfig): strin
   return `terraform init ${options}`;
 };
 
-const buildExecuteCommandWithOption = (path: string, tfCmd: TfCmd, _config: OverviewConfig): string => {
-  return `terraform ${tfCmd}`
-}
+const buildExecuteCommandWithOption = (
+  path: string,
+  tfCmd: TfCmd,
+  _config: OverviewConfig
+): string => {
+  return `terraform ${tfCmd}`;
+};

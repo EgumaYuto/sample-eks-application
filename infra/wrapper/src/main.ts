@@ -1,12 +1,12 @@
-import {Overview, OverviewConfig, OverviewDirectory} from "./model";
+import { Overview, OverviewConfig, OverviewDirectory } from "./model";
 import * as fs from "fs";
 import { argv } from "./arguments";
 import { buildCommandWithOption, TfCmd } from "./terraform-executor";
 import { spawn } from "child_process";
-import {loadOverviewJson, loadEnvFile} from "./file-loader";
+import { loadOverviewJson, loadEnvFile } from "./file-loader";
 
 export const extractModulePaths = (
-    directories: Array<OverviewDirectory>
+  directories: Array<OverviewDirectory>
 ): Array<string> => {
   return doExtractModulePaths("", directories);
 };
@@ -27,36 +27,33 @@ const doExtractModulePaths = (
 };
 
 const logCommands = (command: string, path: string) => {
-  const separatorSize = command.length > path.length ? command.length + 8 : path.length + 8
-  const separator = "=".repeat(separatorSize)
+  const separatorSize =
+    command.length > path.length ? command.length + 8 : path.length + 8;
+  const separator = "=".repeat(separatorSize);
   console.log(
-      `\n\n${separator}\n\nPath : ${path} \nCommand : ${command}\n\n${separator}\n`
+    `\n\n${separator}\n\nPath : ${path} \nCommand : ${command}\n\n${separator}\n`
   );
-}
+};
 
-
-const execTerraform = (
-  tfCmd: TfCmd,
-  paths: Array<string>
-) => {
+const execTerraform = (tfCmd: TfCmd, paths: Array<string>) => {
   if (paths.length === 0) {
-    return
+    return;
   }
   const path = paths[0];
   const command = buildCommandWithOption(path, tfCmd, overview.config);
   doExecTerraform(command, path, () => {
-    execTerraform(tfCmd, paths.slice(1))
-  })
+    execTerraform(tfCmd, paths.slice(1));
+  });
 };
 
-const doExecTerraform = (
-  command : string,
-  path: string,
-  onEnd : () => void
-) => {
+const doExecTerraform = (command: string, path: string, onEnd: () => void) => {
   logCommands(command, path);
   const commandWords = command.split(" ");
-  const proc = spawn(commandWords[0], commandWords.slice(1).filter(a => a.length !== 0), { cwd: `../${path}` });
+  const proc = spawn(
+    commandWords[0],
+    commandWords.slice(1).filter((a) => a.length !== 0),
+    { cwd: `../${path}` }
+  );
   proc.stdout.on("data", (data) => {
     process.stdout.write(data.toString());
   });
@@ -64,19 +61,24 @@ const doExecTerraform = (
     process.stdout.write(data.toString());
   });
   proc.stderr.on("end", onEnd);
-}
+};
 
-const loadEnvVariables = (config : OverviewConfig) => {
+const loadEnvVariables = (config: OverviewConfig) => {
   const envVariables = loadEnvFile(config);
-  Object.entries(envVariables).forEach(entry => {
+  Object.entries(envVariables).forEach((entry) => {
     if (entry[1] instanceof Array) {
-      process.env[`TF_VAR_${entry[0]}`] = `[${entry[1].map(item => '"' + item + '"').join(",")}]`
+      process.env[`TF_VAR_${entry[0]}`] = `[${entry[1]
+        .map((item) => '"' + item + '"')
+        .join(",")}]`;
     } else {
-      process.env[`TF_VAR_${entry[0]}`] = entry[1]
+      process.env[`TF_VAR_${entry[0]}`] = entry[1];
     }
   });
-}
+};
 
 const overview = loadOverviewJson();
-loadEnvVariables(overview.config)
-execTerraform(argv["tf_cmd"] as TfCmd, extractModulePaths(overview.directories));
+loadEnvVariables(overview.config);
+execTerraform(
+  argv["tf_cmd"] as TfCmd,
+  extractModulePaths(overview.directories)
+);
