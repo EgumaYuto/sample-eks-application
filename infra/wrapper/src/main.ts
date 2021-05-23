@@ -58,7 +58,7 @@ const doExecTerraform = (command: string, path: string, onEnd: () => void) => {
     process.stdout.write(data.toString());
   });
   childProcess.stderr.on("data", (data) => {
-    process.stdout.write(data.toString());
+    process.stderr.write(data.toString());
   });
   childProcess.on("end", onEnd);
 };
