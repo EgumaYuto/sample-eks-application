@@ -52,12 +52,12 @@ const doExecTerraform = (command: string, path: string, onEnd: () => void) => {
   const childProcess = spawn(
     commandWords[0],
     commandWords.slice(1).filter((a) => a.length !== 0),
-    { cwd: `../${path}` }
+    { cwd: `../${path}`, stdio: [process.stdin, process.stdout, process.stderr] }
   );
-  childProcess.stdout.on("data", (data) => {
+  childProcess.on("message", (data) => {
     process.stdout.write(data.toString());
   });
-  childProcess.stderr.on("data", (data) => {
+  childProcess.on("error", (data) => {
     process.stderr.write(data.toString());
   });
   childProcess.on("end", onEnd);
