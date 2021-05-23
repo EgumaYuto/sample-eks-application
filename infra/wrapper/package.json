@@ -5,6 +5,7 @@
     "start": "ts-node src/main.ts --path ../orverview.json",
     "init": "ts-node src/main.ts --path ../orverview.json --tf_cmd init",
     "plan": "ts-node src/main.ts --path ../orverview.json --tf_cmd plan --env dev",
+    "apply": "ts-node src/main.ts --path ../orverview.json --tf_cmd apply --env dev",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write \"src/**/*.ts\""
   },
