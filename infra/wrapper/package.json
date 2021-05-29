@@ -2,12 +2,9 @@
   "name": "infra",
   "private": true,
   "scripts": {
-    "start": "ts-node src/main.ts --path ../orverview.json",
-    "init": "ts-node src/main.ts --path ../orverview.json --tf_cmd init",
-    "plan": "ts-node src/main.ts --path ../orverview.json --tf_cmd plan --env dev",
-    "apply": "ts-node src/main.ts --path ../orverview.json --tf_cmd apply --env dev",
+    "start": "ts-node src/main.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"src/**/*.ts\""
+    "prettier": "prettier --write \"src/**/*.ts\""
   },
   "dependencies": {
     "yargs": "^17.0.1"

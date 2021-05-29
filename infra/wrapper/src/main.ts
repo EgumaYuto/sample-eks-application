@@ -52,7 +52,10 @@ const doExecTerraform = (command: string, path: string, onEnd: () => void) => {
   const childProcess = spawn(
     commandWords[0],
     commandWords.slice(1).filter((a) => a.length !== 0),
-    { cwd: `../${path}`, stdio: [process.stdin, process.stdout, process.stderr] }
+    {
+      cwd: `../${path}`,
+      stdio: [process.stdin, process.stdout, process.stderr],
+    }
   );
   childProcess.on("message", (data) => {
     process.stdout.write(data.toString());
@@ -60,7 +63,7 @@ const doExecTerraform = (command: string, path: string, onEnd: () => void) => {
   childProcess.on("error", (data) => {
     process.stderr.write(data.toString());
   });
-  childProcess.on("end", onEnd);
+  childProcess.on("exit", onEnd);
 };
 
 const loadEnvVariables = (config: OverviewConfig) => {
@@ -78,7 +81,4 @@ const loadEnvVariables = (config: OverviewConfig) => {
 
 const overview = loadOverviewJson();
 loadEnvVariables(overview.config);
-execTerraform(
-  argv["tf_cmd"] as TfCmd,
-  extractModulePaths(overview.directories)
-);
+execTerraform(argv["cmd"] as TfCmd, extractModulePaths(overview.directories));

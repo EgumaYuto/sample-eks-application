@@ -13,11 +13,11 @@ export const loadEnvFile = (config: OverviewConfig): object => {
 };
 
 const getOverviewFilePath = (): string => {
-  const path = argv.path;
-  if (typeof path === "string") {
-    return path;
+  const overview = argv.overview;
+  if (typeof overview === "string") {
+    return overview;
   }
-  throw new Error(`パスが文字列ではありません, path: ${path}`);
+  throw new Error(`パスが文字列ではありません, path: ${overview}`);
 };
 
 const getEnv = (): string => {
