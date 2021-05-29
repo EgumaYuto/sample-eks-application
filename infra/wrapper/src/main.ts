@@ -1,9 +1,8 @@
-import { Overview, OverviewConfig, OverviewDirectory } from "./model";
-import * as fs from "fs";
-import { argv } from "./arguments";
+import { OverviewConfig, OverviewDirectory } from "./model";
 import { buildCommandWithOption, TfCmd } from "./terraform-executor";
 import { spawn } from "child_process";
 import { loadOverviewJson, loadEnvFile } from "./file-loader";
+import { getCmd } from "./arguments";
 
 export const extractModulePaths = (
   directories: Array<OverviewDirectory>
@@ -81,4 +80,4 @@ const loadEnvVariables = (config: OverviewConfig) => {
 
 const overview = loadOverviewJson();
 loadEnvVariables(overview.config);
-execTerraform(argv["cmd"] as TfCmd, extractModulePaths(overview.directories));
+execTerraform(getCmd() as TfCmd, extractModulePaths(overview.directories));
