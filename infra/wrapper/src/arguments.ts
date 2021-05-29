@@ -17,5 +17,3 @@ export const argv = yargs(hideBin(process.argv))
     type: "string",
     description: "Overview json file path.",
   }).argv;
-
-console.log(argv);
