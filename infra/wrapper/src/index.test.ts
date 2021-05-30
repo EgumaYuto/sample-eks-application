@@ -1,4 +1,4 @@
-import { extractModulePaths } from "./main";
+import { extractModulePaths } from "./index";
 
 describe("main の単体テスト", () => {
   it("extractModulePaths", () => {

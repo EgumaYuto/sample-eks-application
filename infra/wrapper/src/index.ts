@@ -1,8 +1,9 @@
-import { OverviewConfig, OverviewDirectory } from "./model";
+import { OverviewConfig, OverviewDirectory } from "./overview/model";
 import { buildCommandWithOption, TfCmd } from "./terraform-executor";
 import { spawn } from "child_process";
-import { loadOverviewJson, loadEnvFile } from "./file-loader";
+import { loadOverviewJson } from "./overview";
 import { getCmd } from "./arguments";
+import { loadEnvVariablesFile } from "./config/env-variables";
 
 export const extractModulePaths = (
   directories: Array<OverviewDirectory>
@@ -66,7 +67,7 @@ const doExecTerraform = (command: string, path: string, onEnd: () => void) => {
 };
 
 const loadEnvVariables = (config: OverviewConfig) => {
-  const envVariables = loadEnvFile(config);
+  const envVariables = loadEnvVariablesFile(config);
   Object.entries(envVariables).forEach((entry) => {
     if (entry[1] instanceof Array) {
       process.env[`TF_VAR_${entry[0]}`] = `[${entry[1]
