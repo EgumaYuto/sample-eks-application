@@ -1,9 +1,9 @@
-import { OverviewConfig, OverviewDirectory } from "./overview/model";
+import { Overview, OverviewDirectory } from "./overview/model";
 import { buildCommandWithOption, TfCmd } from "./terraform-executor";
 import { spawn } from "child_process";
 import { loadOverviewJson } from "./overview";
-import { getCmd } from "./arguments";
-import { loadEnvVariablesFile } from "./config/env-variables";
+import { getCmd, getEnv } from "./arguments";
+import { loadEnvVariables } from "./config/env-variables";
 
 export const extractModulePaths = (
   directories: Array<OverviewDirectory>
@@ -66,19 +66,17 @@ const doExecTerraform = (command: string, path: string, onEnd: () => void) => {
   childProcess.on("exit", onEnd);
 };
 
-const loadEnvVariables = (config: OverviewConfig) => {
-  const envVariables = loadEnvVariablesFile(config);
-  Object.entries(envVariables).forEach((entry) => {
-    if (entry[1] instanceof Array) {
-      process.env[`TF_VAR_${entry[0]}`] = `[${entry[1]
-        .map((item) => '"' + item + '"')
-        .join(",")}]`;
-    } else {
-      process.env[`TF_VAR_${entry[0]}`] = entry[1];
-    }
-  });
+const loadEnvVariablesFilePath = (overview: Overview): string => {
+  const env = getEnv();
+  const variables = overview.config.env_variables.find(
+    (variables) => variables.name === env
+  );
+  if (variables) {
+    return variables.file_path;
+  }
+  throw new Error(`env に対応した変数が設定されていません, env: ${env}`);
 };
 
 const overview = loadOverviewJson();
-loadEnvVariables(overview.config);
+loadEnvVariables(loadEnvVariablesFilePath(overview));
 execTerraform(getCmd() as TfCmd, extractModulePaths(overview.directories));

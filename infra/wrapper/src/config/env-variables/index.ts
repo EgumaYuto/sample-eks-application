@@ -1,22 +1,24 @@
-import { OverviewConfig } from "../../overview/model";
 import fs from "fs";
-import { getEnv } from "../../arguments";
 
-export const loadEnvVariablesFile = (config: OverviewConfig): object => {
-  return JSON.parse(
-    fs.readFileSync("../" + loadEnvVariablesFilePath(getEnv(), config), "utf-8")
-  );
+export const loadEnvVariables = (envFilePath: string): object => {
+  const envVariables = readEnvVariables(envFilePath);
+  storeEnvVariables(envVariables);
+  return envVariables;
 };
 
-const loadEnvVariablesFilePath = (
-  env: string,
-  config: OverviewConfig
-): string => {
-  const variables = config.env_variables.find(
-    (variables) => variables.name === env
-  );
-  if (variables) {
-    return variables.file_path;
-  }
-  throw new Error(`env に対応した変数が設定されていません, env: ${env}`);
+const readEnvVariables = (envFilePath: string): object => {
+  // TODO "../" は外部から受け取る
+  return JSON.parse(fs.readFileSync(`../${envFilePath}`, "utf-8"));
+};
+
+const storeEnvVariables = (envVariables: object): void => {
+  Object.entries(envVariables).forEach((entry) => {
+    if (entry[1] instanceof Array) {
+      process.env[`TF_VAR_${entry[0]}`] = `[${entry[1]
+        .map((item) => '"' + item + '"')
+        .join(",")}]`;
+    } else {
+      process.env[`TF_VAR_${entry[0]}`] = entry[1];
+    }
+  });
 };
