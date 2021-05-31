@@ -1,0 +1,30 @@
+
+config:
+  backend:
+    type: S3
+    base_path: state
+  env_variables:
+    - name: dev
+      file_path: _terraform_config/env_variables/dev.json
+directories:
+  - path: platform
+    directories:
+      - path: network
+        directories:
+          - path: main
+            directories:
+              - path: vpc
+                type: module
+              - path: subnet
+                directories:
+                  - path: public
+                    type: module
+                  - path: private
+                    type: module
+                    depends_on:
+                      - platform/main/vpc
+                      - platform/main/subnet/public
+      - path: ecs-cluster
+        directories:
+          - path: main
+            type: module
