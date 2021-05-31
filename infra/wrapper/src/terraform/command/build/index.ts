@@ -5,7 +5,7 @@ export const buildCommandWithOption = (
   tfCmd: TfCmd,
   envVariables: object
 ): string => {
-  const baseCmd = tfCmd.split(' ')[0];
+  const baseCmd = tfCmd.split(" ")[0];
   switch (baseCmd) {
     case "init":
       return buildInitCommandWithOption(path, envVariables);

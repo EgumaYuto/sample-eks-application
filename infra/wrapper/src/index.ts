@@ -1,6 +1,6 @@
 import { Overview, OverviewDirectory } from "./overview/model";
 import { TfCmd } from "./terraform/command/build";
-import { getCmd, getEnv } from "./arguments";
+import { getCmd, getEnv, getPath } from "./arguments";
 import { loadEnvVariables } from "./config/env-variables";
 import { execTerraform } from "./terraform/command/execute";
 import { loadOverviewFile } from "./overview";
@@ -8,7 +8,13 @@ import { loadOverviewFile } from "./overview";
 export const extractModulePaths = (
   directories: Array<OverviewDirectory>
 ): Array<string> => {
-  return doExtractModulePaths("", directories);
+  const paths = getPath().split(",");
+  if (paths === ["ALL"]) {
+    doExtractModulePaths("", directories);;
+  }
+  return doExtractModulePaths("", directories).filter((directory) =>
+    paths.includes(directory)
+  );
 };
 
 const doExtractModulePaths = (
@@ -43,6 +49,6 @@ const modulePaths = extractModulePaths(overview.directories);
 const tfCmd = getCmd();
 execTerraform(
   tfCmd as TfCmd,
-  tfCmd === 'destroy' ? modulePaths.reverse() : modulePaths,
+  tfCmd.startsWith("destroy") ? modulePaths.reverse() : modulePaths,
   envVariables
 );

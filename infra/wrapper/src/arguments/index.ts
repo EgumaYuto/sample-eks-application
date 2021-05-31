@@ -17,6 +17,11 @@ const argv = yargs(hideBin(process.argv))
     alias: "o",
     type: "string",
     description: "(Required) Overview file path.",
+  })
+  .option("path", {
+    alias: "p",
+    type: "string",
+    description: "(Required) Execute Path",
   }).argv;
 
 export const getCmd = (): string => {
@@ -41,4 +46,12 @@ export const getOverviewFilePath = (): string => {
     throw new Error(`Overview file path is undefined. overview : ${overview}`);
   }
   return overview;
+};
+
+export const getPath = (): string => {
+  const path = argv.path;
+  if (!path) {
+    throw new Error(`Target path is undefined. path : ${path}`);
+  }
+  return path;
 };

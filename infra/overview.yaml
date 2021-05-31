@@ -22,8 +22,8 @@ directories:
                   - path: private
                     type: module
                     depends_on:
-                      - platform/main/vpc
-                      - platform/main/subnet/public
+                      - platform/network/main/vpc
+                      - platform/network/main/subnet/public
       - path: ecs-cluster
         directories:
           - path: main
