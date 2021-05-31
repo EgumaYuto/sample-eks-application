@@ -42,5 +42,5 @@ const envVariables = loadEnvVariables(loadEnvVariablesFilePath(overview));
 execTerraform(
   getCmd() as TfCmd,
   extractModulePaths(overview.directories),
-  overview
+  envVariables
 );
