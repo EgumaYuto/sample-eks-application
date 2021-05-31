@@ -2,15 +2,6 @@ import { buildCommandWithOption, TfCmd } from "../build";
 import { Overview } from "../../../overview/model";
 import { spawn } from "child_process";
 
-const logCommands = (command: string, path: string) => {
-  const separatorSize =
-    command.length > path.length ? command.length + 8 : path.length + 8;
-  const separator = "=".repeat(separatorSize);
-  console.log(
-    `\n\n${separator}\n\nPath : ${path} \nCommand : ${command}\n\n${separator}\n`
-  );
-};
-
 export const execTerraform = (
   tfCmd: TfCmd,
   paths: Array<string>,
@@ -44,4 +35,13 @@ const doExecTerraform = (command: string, path: string, onEnd: () => void) => {
     process.stderr.write(data.toString());
   });
   childProcess.on("exit", onEnd);
+};
+
+const logCommands = (command: string, path: string) => {
+  const separatorSize =
+    command.length > path.length ? command.length + 8 : path.length + 8;
+  const separator = "=".repeat(separatorSize);
+  console.log(
+    `\n\n${separator}\n\nPath : ${path} \nCommand : ${command}\n\n${separator}\n`
+  );
 };
