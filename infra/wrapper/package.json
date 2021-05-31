@@ -8,6 +8,7 @@
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
+    "yaml": "^1.10.2",
     "yargs": "^17.0.1"
   },
   "devDependencies": {

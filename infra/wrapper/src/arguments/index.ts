@@ -16,7 +16,7 @@ const argv = yargs(hideBin(process.argv))
   .option("overview", {
     alias: "o",
     type: "string",
-    description: "(Required) Overview json file path.",
+    description: "(Required) Overview file path.",
   }).argv;
 
 export const getCmd = (): string => {
@@ -35,12 +35,10 @@ export const getEnv = (): string => {
   return env;
 };
 
-export const getOverviewJsonFilePath = (): string => {
+export const getOverviewFilePath = (): string => {
   const overview = argv.overview;
   if (!overview) {
-    throw new Error(
-      `Overview json file path is undefined. overview : ${overview}`
-    );
+    throw new Error(`Overview file path is undefined. overview : ${overview}`);
   }
   return overview;
 };

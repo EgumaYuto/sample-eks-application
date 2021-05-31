@@ -1,9 +1,9 @@
 import { Overview, OverviewDirectory } from "./overview/model";
 import { TfCmd } from "./terraform/command/build";
-import { loadOverviewJson } from "./overview";
 import { getCmd, getEnv } from "./arguments";
 import { loadEnvVariables } from "./config/env-variables";
 import { execTerraform } from "./terraform/command/execute";
+import { loadOverviewFile } from "./overview";
 
 export const extractModulePaths = (
   directories: Array<OverviewDirectory>
@@ -37,7 +37,7 @@ const loadEnvVariablesFilePath = (overview: Overview): string => {
   throw new Error(`env に対応した変数が設定されていません, env: ${env}`);
 };
 
-const overview = loadOverviewJson();
+const overview = loadOverviewFile();
 const envVariables = loadEnvVariables(loadEnvVariablesFilePath(overview));
 execTerraform(
   getCmd() as TfCmd,
