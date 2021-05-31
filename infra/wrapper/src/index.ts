@@ -39,8 +39,10 @@ const loadEnvVariablesFilePath = (overview: Overview): string => {
 
 const overview = loadOverviewFile();
 const envVariables = loadEnvVariables(loadEnvVariablesFilePath(overview));
+const modulePaths = extractModulePaths(overview.directories);
+const tfCmd = getCmd();
 execTerraform(
-  getCmd() as TfCmd,
-  extractModulePaths(overview.directories),
+  tfCmd as TfCmd,
+  tfCmd === 'destroy' ? modulePaths.reverse() : modulePaths,
   envVariables
 );
