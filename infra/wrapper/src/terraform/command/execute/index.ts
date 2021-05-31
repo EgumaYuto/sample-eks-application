@@ -1,23 +1,26 @@
 import { buildCommandWithOption, TfCmd } from "../build";
-import { Overview } from "../../../overview/model";
 import { spawn } from "child_process";
 
 export const execTerraform = (
   tfCmd: TfCmd,
   paths: Array<string>,
-  overview: Overview
-) => {
+  envVariables: object
+): void => {
   if (paths.length === 0) {
     return;
   }
   const path = paths[0];
-  const command = buildCommandWithOption(path, tfCmd, overview.config);
+  const command = buildCommandWithOption(path, tfCmd, envVariables);
   doExecTerraform(command, path, () => {
-    execTerraform(tfCmd, paths.slice(1), overview);
+    execTerraform(tfCmd, paths.slice(1), envVariables);
   });
 };
 
-const doExecTerraform = (command: string, path: string, onEnd: () => void) => {
+const doExecTerraform = (
+  command: string,
+  path: string,
+  onEnd: () => void
+): void => {
   logCommands(command, path);
   const commandWords = command.split(" ");
   const childProcess = spawn(
@@ -37,7 +40,7 @@ const doExecTerraform = (command: string, path: string, onEnd: () => void) => {
   childProcess.on("exit", onEnd);
 };
 
-const logCommands = (command: string, path: string) => {
+const logCommands = (command: string, path: string): void => {
   const separatorSize =
     command.length > path.length ? command.length + 8 : path.length + 8;
   const separator = "=".repeat(separatorSize);

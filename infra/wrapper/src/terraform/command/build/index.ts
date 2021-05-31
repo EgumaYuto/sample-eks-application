@@ -1,19 +1,17 @@
-import { OverviewConfig } from "../../../overview/model";
-
 export type TfCmd = "init" | "plan" | "apply" | "destroy";
 
 export const buildCommandWithOption = (
   path: string,
   tfCmd: TfCmd,
-  config: OverviewConfig
+  envVariables: object
 ): string => {
   switch (tfCmd) {
     case "init":
-      return buildInitCommandWithOption(path, config);
+      return buildInitCommandWithOption(path, envVariables);
     case "plan":
     case "apply":
     case "destroy":
-      return buildExecuteCommandWithOption(path, tfCmd, config);
+      return buildExecuteCommandWithOption(path, tfCmd);
     default:
       throw new Error(`サポートできていない tf cmd: ${tfCmd}`);
   }
@@ -21,21 +19,18 @@ export const buildCommandWithOption = (
 
 const buildInitCommandWithOption = (
   path: string,
-  config: OverviewConfig
+  _envVariables: object
 ): string => {
+  // TODO S3じゃない場合との兼ね合い
   const options =
     `-backend-config key=state/${
       path.endsWith("/") ? path.slice(0, -1) : path
     }.tfstate` +
-    ` -backend-config bucket=sample-ecs-application-tfstate` + // TODO 外部から取得する
-    ` -backend-config region=ap-northeast-1`; // TODO 外部から取得する
+    ` -backend-config bucket=sample-ecs-application-tfstate` +
+    ` -backend-config region=ap-northeast-1`;
   return `terraform init ${options}`;
 };
 
-const buildExecuteCommandWithOption = (
-  path: string,
-  tfCmd: TfCmd,
-  _config: OverviewConfig
-): string => {
+const buildExecuteCommandWithOption = (path: string, tfCmd: TfCmd): string => {
   return `terraform ${tfCmd}`;
 };
