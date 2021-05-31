@@ -1,4 +1,4 @@
-import { Overview, OverviewDirectory } from "./overview/model";
+import {Overview, OverviewConfig, OverviewDirectory} from "./overview/model";
 import { buildCommandWithOption, TfCmd } from "./terraform/command/build";
 import { spawn } from "child_process";
 import { loadOverviewJson } from "./overview";
@@ -35,14 +35,14 @@ const logCommands = (command: string, path: string) => {
   );
 };
 
-const execTerraform = (tfCmd: TfCmd, paths: Array<string>) => {
+const execTerraform = (tfCmd: TfCmd, paths: Array<string>, overview: Overview) => {
   if (paths.length === 0) {
     return;
   }
   const path = paths[0];
   const command = buildCommandWithOption(path, tfCmd, overview.config);
   doExecTerraform(command, path, () => {
-    execTerraform(tfCmd, paths.slice(1));
+    execTerraform(tfCmd, paths.slice(1), overview);
   });
 };
 
@@ -79,4 +79,4 @@ const loadEnvVariablesFilePath = (overview: Overview): string => {
 
 const overview = loadOverviewJson();
 loadEnvVariables(loadEnvVariablesFilePath(overview));
-execTerraform(getCmd() as TfCmd, extractModulePaths(overview.directories));
+execTerraform(getCmd() as TfCmd, extractModulePaths(overview.directories), overview);
