@@ -28,3 +28,27 @@ directories:
         directories:
           - path: main
             type: module
+  - path: service
+    directories:
+      - path: sample-api
+        directories:
+          - path: ecr
+            type: module
+          - path: elb
+            type: module
+          - path: ecs
+            type: module
+          - path: api-gateway
+            type: module
+  - path: operation
+    directories:
+      - path: bastion
+        type: module
+      - path: cicd
+        directories:
+          - path: sample-api
+            directories:
+              - path: build
+                type: module
+              - path: deploy
+                type: module
