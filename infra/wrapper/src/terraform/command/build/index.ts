@@ -1,4 +1,4 @@
-import { OverviewConfig } from "./overview/model";
+import { OverviewConfig } from "../../../overview/model";
 
 export type TfCmd = "init" | "plan" | "apply" | "destroy";
 

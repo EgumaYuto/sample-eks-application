@@ -1,5 +1,5 @@
 import { Overview, OverviewDirectory } from "./overview/model";
-import { buildCommandWithOption, TfCmd } from "./terraform-executor";
+import { buildCommandWithOption, TfCmd } from "./terraform/command/build";
 import { spawn } from "child_process";
 import { loadOverviewJson } from "./overview";
 import { getCmd, getEnv } from "./arguments";
