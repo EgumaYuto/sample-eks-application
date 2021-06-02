@@ -1,30 +1,41 @@
 import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
 
-const argv = yargs(hideBin(process.argv))
-  .option("cmd", {
-    alias: "c",
-    type: "string",
-    description:
-      "(Required) terraform command (init, plan, apply and so on...)",
+const argv = yargs
+  .command("execute", "Execute terraform", (yargs) => {
+    return yargs
+      .option("cmd", {
+        alias: "c",
+        type: "string",
+        description:
+          "(Required) terraform command (init, plan, apply and so on...)",
+      })
+      .option("env", {
+        alias: "e",
+        type: "string",
+        description: "(Required) Execute environment",
+      })
+      .option("overview", {
+        alias: "o",
+        type: "string",
+        description: "(Required) Overview file path.",
+      })
+      .option("path", {
+        alias: "p",
+        type: "string",
+        description: "(Required) Execute Path",
+      });
   })
-  .option("env", {
-    alias: "e",
-    type: "string",
-    description: "(Required) Execute environment",
-  })
-  .option("overview", {
-    alias: "o",
-    type: "string",
-    description: "(Required) Overview file path.",
-  })
-  .option("path", {
-    alias: "p",
-    type: "string",
-    description: "(Required) Execute Path",
-  }).argv;
+  .help().argv;
 
-export const getCmd = (): string => {
+export const getCommand = (): string | number => {
+  const cmd = argv._[0];
+  if (!cmd) {
+    throw new Error(`Command is undefined. cmd : ${cmd}`);
+  }
+  return cmd;
+};
+
+export const getTfCmd = (): string => {
   const cmd = argv.cmd;
   if (!cmd) {
     throw new Error(`Terraform command is undefined. cmd : ${cmd}`);
