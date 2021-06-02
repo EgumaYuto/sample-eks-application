@@ -1,14 +1,14 @@
 import { Overview, OverviewDirectory } from "./overview/model";
 import { TfCmd } from "./terraform/command/build";
-import { getTfCmd, getEnv, getPath, getCommand } from "./arguments";
+import { getArguments } from "./arguments";
 import { loadEnvVariables } from "./config/env-variables";
 import { execTerraform } from "./terraform/command/execute";
 import { loadOverviewFile } from "./overview";
 
 export const extractModulePaths = (
-  directories: Array<OverviewDirectory>
+  directories: Array<OverviewDirectory>,
+  paths: Array<string>
 ): Array<string> => {
-  const paths = getPath().split(",");
   if (paths.includes("ALL")) {
     return doExtractModulePaths("", directories);
   }
@@ -32,8 +32,7 @@ const doExtractModulePaths = (
   });
 };
 
-const loadEnvVariablesFilePath = (overview: Overview): string => {
-  const env = getEnv();
+const loadEnvVariablesFilePath = (overview: Overview, env: string): string => {
   const variables = overview.config.env_variables.find(
     (variables) => variables.name === env
   );
@@ -43,12 +42,18 @@ const loadEnvVariablesFilePath = (overview: Overview): string => {
   throw new Error(`env に対応した変数が設定されていません, env: ${env}`);
 };
 
-const overview = loadOverviewFile();
-const envVariables = loadEnvVariables(loadEnvVariablesFilePath(overview));
-const modulePaths = extractModulePaths(overview.directories);
-const tfCmd = getTfCmd();
-const command = getCommand();
-if (command === "execute") {
+const cliArguments = getArguments();
+if (cliArguments.command === "execute") {
+  const options = cliArguments.executeOption;
+  const overview = loadOverviewFile(options.overviewFilePath);
+  const envVariables = loadEnvVariables(
+    loadEnvVariablesFilePath(overview, options.env)
+  );
+  const modulePaths = extractModulePaths(
+    overview.directories,
+    options.targetPath.split(",")
+  );
+  let tfCmd = options.command;
   execTerraform(
     tfCmd as TfCmd,
     tfCmd.startsWith("destroy") ? modulePaths.reverse() : modulePaths,

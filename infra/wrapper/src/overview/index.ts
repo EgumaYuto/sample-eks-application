@@ -1,10 +1,8 @@
 import { Overview } from "./model";
 import fs from "fs";
-import { getOverviewFilePath } from "../arguments";
 import YAML from "yaml";
 
-export const loadOverviewFile = (): Overview => {
-  const filePath = getOverviewFilePath();
+export const loadOverviewFile = (filePath: string): Overview => {
   if (filePath.endsWith("json")) {
     return loadOverviewJson(filePath);
   }

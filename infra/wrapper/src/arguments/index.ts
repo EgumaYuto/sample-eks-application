@@ -1,5 +1,29 @@
 import yargs from "yargs";
 
+export interface Arguments {
+  command: "execute";
+  executeOption: ExecuteOption;
+}
+
+export interface ExecuteOption {
+  command: string;
+  env: string;
+  overviewFilePath: string;
+  targetPath: string;
+}
+
+export const getArguments = (): Arguments => {
+  return {
+    command: getCommand() as "execute",
+    executeOption: {
+      command: getTfCmd(),
+      env: getEnv(),
+      overviewFilePath: getOverviewFilePath(),
+      targetPath: getPath(),
+    },
+  };
+};
+
 const argv = yargs
   .command("execute", "Execute terraform", (yargs) => {
     return yargs
@@ -22,12 +46,12 @@ const argv = yargs
       .option("path", {
         alias: "p",
         type: "string",
-        description: "(Required) Execute Path",
+        description: "(Required) Execute Path, csv format or 'ALL'",
       });
   })
   .help().argv;
 
-export const getCommand = (): string | number => {
+const getCommand = (): string | number => {
   const cmd = argv._[0];
   if (!cmd) {
     throw new Error(`Command is undefined. cmd : ${cmd}`);
@@ -35,7 +59,7 @@ export const getCommand = (): string | number => {
   return cmd;
 };
 
-export const getTfCmd = (): string => {
+const getTfCmd = (): string => {
   const cmd = argv.cmd;
   if (!cmd) {
     throw new Error(`Terraform command is undefined. cmd : ${cmd}`);
@@ -43,7 +67,7 @@ export const getTfCmd = (): string => {
   return cmd;
 };
 
-export const getEnv = (): string => {
+const getEnv = (): string => {
   const env = argv.env;
   if (!env) {
     throw new Error(`Execute environment is undefined. env : ${env}`);
@@ -51,7 +75,7 @@ export const getEnv = (): string => {
   return env;
 };
 
-export const getOverviewFilePath = (): string => {
+const getOverviewFilePath = (): string => {
   const overview = argv.overview;
   if (!overview) {
     throw new Error(`Overview file path is undefined. overview : ${overview}`);
@@ -59,7 +83,7 @@ export const getOverviewFilePath = (): string => {
   return overview;
 };
 
-export const getPath = (): string => {
+const getPath = (): string => {
   const path = argv.path;
   if (!path) {
     throw new Error(`Target path is undefined. path : ${path}`);
