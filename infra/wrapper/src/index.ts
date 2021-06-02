@@ -9,8 +9,8 @@ export const extractModulePaths = (
   directories: Array<OverviewDirectory>
 ): Array<string> => {
   const paths = getPath().split(",");
-  if (paths === ["ALL"]) {
-    doExtractModulePaths("", directories);;
+  if (paths.includes('ALL')) {
+    return doExtractModulePaths("", directories);
   }
   return doExtractModulePaths("", directories).filter((directory) =>
     paths.includes(directory)
