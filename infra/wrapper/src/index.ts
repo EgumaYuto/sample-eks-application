@@ -4,6 +4,7 @@ import { getArguments } from "./arguments";
 import { loadEnvVariables } from "./config/env-variables";
 import { execTerraform } from "./terraform/command/execute";
 import { loadOverviewFile } from "./overview";
+import fs from "fs";
 
 export const extractModulePaths = (
   directories: Array<OverviewDirectory>,
@@ -45,6 +46,9 @@ const loadEnvVariablesFilePath = (overview: Overview, env: string): string => {
 const cliArguments = getArguments();
 if (cliArguments.command === "execute") {
   const options = cliArguments.executeOption;
+  if (!options) {
+    throw new Error(`Invalid Options : ${options}`);
+  }
   const overview = loadOverviewFile(options.overviewFilePath);
   const envVariables = loadEnvVariables(
     loadEnvVariablesFilePath(overview, options.env)
@@ -53,10 +57,25 @@ if (cliArguments.command === "execute") {
     overview.directories,
     options.targetPath.split(",")
   );
-  let tfCmd = options.command;
+  const tfCmd = options.command;
   execTerraform(
     tfCmd as TfCmd,
     tfCmd.startsWith("destroy") ? modulePaths.reverse() : modulePaths,
     envVariables
   );
+}
+
+if (cliArguments.command === "check") {
+  const options = cliArguments.checkOption;
+  if (!options) {
+    throw new Error(`Invalid Options : ${options}`);
+  }
+  const overview = loadOverviewFile(options.overviewFilePath);
+  const modulePaths = extractModulePaths(overview.directories, ["ALL"]);
+
+  modulePaths.forEach((path) => {
+    fs.stat(`../${path}`, (err, stats) => {
+      console.log(`${path} : ${stats ? stats.isDirectory() : false}`);
+    });
+  });
 }

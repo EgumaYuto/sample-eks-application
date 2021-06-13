@@ -1,8 +1,9 @@
 import yargs from "yargs";
 
 export interface Arguments {
-  command: "execute";
-  executeOption: ExecuteOption;
+  command: "execute" | "check";
+  executeOption?: ExecuteOption;
+  checkOption?: CheckOption;
 }
 
 export interface ExecuteOption {
@@ -12,16 +13,30 @@ export interface ExecuteOption {
   targetPath: string;
 }
 
+export interface CheckOption {
+  overviewFilePath: string;
+}
+
 export const getArguments = (): Arguments => {
-  return {
-    command: getCommand() as "execute",
-    executeOption: {
-      command: getTfCmd(),
-      env: getEnv(),
-      overviewFilePath: getOverviewFilePath(),
-      targetPath: getPath(),
-    },
-  };
+  const command = getCommand() as "execute" | "check";
+  if (command === "execute") {
+    return {
+      command: command,
+      executeOption: {
+        command: getTfCmd(),
+        env: getEnv(),
+        overviewFilePath: getOverviewFilePath(),
+        targetPath: getPath(),
+      },
+    };
+  } else {
+    return {
+      command: command,
+      checkOption: {
+        overviewFilePath: getOverviewFilePath(),
+      },
+    };
+  }
 };
 
 const argv = yargs
@@ -48,6 +63,13 @@ const argv = yargs
         type: "string",
         description: "(Required) Execute Path, csv format or 'ALL'",
       });
+  })
+  .command("check", "Check your project", (yargs) => {
+    return yargs.option("overview", {
+      alias: "o",
+      type: "string",
+      description: "(Required) Overview file path.",
+    });
   })
   .help().argv;
 
