@@ -3,10 +3,12 @@ resource "aws_flow_log" "log" {
   log_destination = aws_cloudwatch_log_group.flow_log_group.arn
   traffic_type    = "ALL"
   vpc_id          = aws_vpc.vpc.id
+  tags            = module.naming.tags
 }
 
 resource "aws_cloudwatch_log_group" "flow_log_group" {
   name = local.flow_log_group
+  tags = module.naming.tags
 }
 
 data "aws_iam_policy_document" "flow_log_assume_policy" {
@@ -40,11 +42,13 @@ data "aws_iam_policy_document" "flow_log_policy" {
 resource "aws_iam_role" "flow_log_role" {
   name               = module.naming.name
   assume_role_policy = data.aws_iam_policy_document.flow_log_assume_policy.json
+  tags               = module.naming.tags
 }
 
 resource "aws_iam_policy" "flow_log_policy" {
   name   = module.naming.name
   policy = data.aws_iam_policy_document.flow_log_policy.json
+  tags   = module.naming.tags
 }
 
 resource "aws_iam_role_policy_attachment" "flow_log_policy_attachment" {
