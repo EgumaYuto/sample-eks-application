@@ -33,7 +33,11 @@ directories:
       - path: sample-api
         directories:
           - path: ecr
-            type: module
+            directories:
+              - path: implements
+                type: module
+              - path: outputs
+                type: module
           - path: elb
             type: module
           - path: ecs
