@@ -17,8 +17,10 @@ export const execTerraform = (
   doExecTerraform(buildWorkspaceCommand("new", env), path, () => {
     doExecTerraform(buildWorkspaceCommand("select", env), path, () => {
       const command = buildCommandWithOption(path, tfCmd, envVariables);
-      doExecTerraform(command, path, () => {
-        execTerraform(tfCmd, paths.slice(1), envVariables);
+      doExecTerraform(command, path, (code) => {
+        if (code === 0) {
+          execTerraform(tfCmd, paths.slice(1), envVariables);
+        }
       });
     });
   });
@@ -27,7 +29,7 @@ export const execTerraform = (
 const doExecTerraform = (
   command: string,
   path: string,
-  onEnd: () => void
+  onEnd: (code: number | null, signal: NodeJS.Signals | null) => void
 ): void => {
   logCommands(command, path);
   const commandWords = command.split(" ");
