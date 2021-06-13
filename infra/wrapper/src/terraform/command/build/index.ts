@@ -18,12 +18,9 @@ export const buildCommandWithOption = (
   }
 };
 
-export const buildWorkspaceCommand = (
-  subCmd: string,
-  env: string
-): string => {
-  return `terraform workspace ${subCmd} ${env}`
-}
+export const buildWorkspaceCommand = (subCmd: string, env: string): string => {
+  return `terraform workspace ${subCmd} ${env}`;
+};
 
 const buildInitCommandWithOption = (
   path: string,

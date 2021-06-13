@@ -1,4 +1,4 @@
-import {buildCommandWithOption, buildWorkspaceCommand, TfCmd} from "../build";
+import { buildCommandWithOption, buildWorkspaceCommand, TfCmd } from "../build";
 import { spawn } from "child_process";
 
 export const execTerraform = (
@@ -14,14 +14,14 @@ export const execTerraform = (
   // TODO こうなるので、やはり env variables で必要なものは定義のさせ方を考えたほうがいいな
   // @ts-ignore
   const env = envVariables.env as string;
-  doExecTerraform(buildWorkspaceCommand('new', env), path, () => {
-    doExecTerraform(buildWorkspaceCommand( 'select', env), path, () => {
+  doExecTerraform(buildWorkspaceCommand("new", env), path, () => {
+    doExecTerraform(buildWorkspaceCommand("select", env), path, () => {
       const command = buildCommandWithOption(path, tfCmd, envVariables);
       doExecTerraform(command, path, () => {
         execTerraform(tfCmd, paths.slice(1), envVariables);
       });
-    })
-  })
+    });
+  });
 };
 
 const doExecTerraform = (
