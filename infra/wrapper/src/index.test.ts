@@ -46,7 +46,7 @@ describe("main の単体テスト", () => {
     ];
 
     // when
-    const actual = extractModulePaths(testDirectories);
+    const actual = extractModulePaths(testDirectories, []);
 
     // then
     expect(actual).toEqual([
