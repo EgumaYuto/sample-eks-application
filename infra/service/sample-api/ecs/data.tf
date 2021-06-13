@@ -33,13 +33,9 @@ data "terraform_remote_state" "ecr" {
 
   config = {
     bucket = var.state_bucket
-    key    = "env:/${terraform.workspace}/state/service/sample-api/ecr.tfstate"
+    key    = "env:/${terraform.workspace}/state/service/sample-api/ecr/outputs.tfstate"
     region = var.default_region
   }
-}
-
-data "aws_ecr_repository" "repository" {
-  name = data.terraform_remote_state.ecr.outputs.name
 }
 
 data "terraform_remote_state" "elb" {
