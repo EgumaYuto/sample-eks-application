@@ -1,3 +1,0 @@
-locals {
-  role = "main-cluster"
-}

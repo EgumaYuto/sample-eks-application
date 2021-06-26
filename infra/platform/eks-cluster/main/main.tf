@@ -12,6 +12,10 @@ module "naming" {
   role   = local.role
 }
 
-resource "aws_ecs_cluster" "cluster" {
-  name = module.naming.name
+resource "aws_eks_cluster" "cluster" {
+  name     = module.naming.name
+  role_arn = aws_iam_role.role.arn
+  vpc_config {
+    subnet_ids = local.subnet_ids
+  }
 }

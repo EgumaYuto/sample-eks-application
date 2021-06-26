@@ -1,11 +1,13 @@
 {
-  "name": "infra",
+  "name": "terraform-wrapper",
   "private": true,
   "scripts": {
     "start": "ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prettier": "prettier --write \"src/**/*.ts\"",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint src/**/*.ts",
+    "apply:platform": "ts-node src/index.ts execute -o ../overview.yaml -e dev -c 'apply' -p platform/network/main/vpc,platform/network/main/subnet/public,platform/network/main/subnet/private,platform/eks-cluster/main",
+    "destroy:platform": "ts-node src/index.ts execute -o ../overview.yaml -e dev -c 'apply' -p platform/network/main/vpc,platform/network/main/subnet/public,platform/network/main/subnet/private,platform/eks-cluster/main"
   },
   "dependencies": {
     "yaml": "^1.10.2",

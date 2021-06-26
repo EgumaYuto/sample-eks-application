@@ -24,10 +24,12 @@ directories:
                     depends_on:
                       - platform/network/main/vpc
                       - platform/network/main/subnet/public
-      - path: ecs-cluster
+      - path: eks-cluster
         directories:
           - path: main
             type: module
+            depends_on:
+              - platform/network/main/subnet/private
   - path: service
     directories:
       - path: sample-api
